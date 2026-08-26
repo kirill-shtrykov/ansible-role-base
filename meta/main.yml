@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  role_name: common
+  description: Base host configuration
+  author: kirill-shtrykov
+  license: MIT
+
+  min_ansible_version: "2.21"
+
+  platforms:
+    - name: EL
+      versions:
+        - "9"
+        - "10"
+    - name: Debian
+      versions:
+        - bookworm  # 12
+        - trixie    # 13
+
+dependencies: []

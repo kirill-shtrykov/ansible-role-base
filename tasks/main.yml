@@ -1,0 +1,54 @@
+---
+- name: "[EL] Enable EPEL release repository"
+  ansible.builtin.package:
+    name: epel-release
+    state: present
+  when: ansible_facts['os_family'] in ['RedHat', 'Rocky']
+
+- name: Load platform variables
+  ansible.builtin.include_vars:
+    file: "{{ ansible_facts.os_family }}.yml"
+
+- name: Install common packages
+  ansible.builtin.package:
+    name: "{{ common_packages + common_packages_platform }}"
+    state: present
+
+- name: Configure Bash
+  ansible.builtin.template:
+    src: bashrc.j2
+    dest: /etc/bashrc
+    mode: "0644"
+
+- name: Add users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    shell: /bin/bash
+    groups: sudo
+    append: true
+  loop: "{{ common_users }}"
+
+- name: Add '.ssh' directory for users
+  ansible.builtin.file:
+    path: "/home/{{ item.name }}/.ssh"
+    state: directory
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: '0700'
+  loop: "{{ common_users }}"
+
+- name: Add users public keys
+  ansible.builtin.copy:
+    content: "{{ item.public_key }}"
+    dest: "/home/{{ item.name }}/.ssh/authorized_keys"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: '0600'
+  loop: "{{ common_users }}"
+
+- name: Add passwordless sudo for users
+  ansible.builtin.copy:
+    content: "{{ item.name }} ALL=(ALL) NOPASSWD:ALL"
+    dest: "/etc/sudoers.d/{{ item.name | replace('.', '_') }}"
+    mode: "0644"
+  loop: "{{ common_users }}"

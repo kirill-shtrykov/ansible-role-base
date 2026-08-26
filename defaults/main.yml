@@ -1,0 +1,30 @@
+---
+common_users: []
+common_packages:
+  - atop
+  - bash-completion
+  - htop
+  - iftop
+  - iotop
+  - jq
+  - lsof
+  - mc
+  - mtr
+  - nano
+  - ncdu
+  - net-tools
+  - nload
+  - nmon
+  - pbzip2
+  - pv
+  - rsync
+  - strace
+  - tcptraceroute
+  - telnet
+  - tmux
+  - tree
+  - unzip
+  - vim
+  - wget
+  - tar
+  - zstd
