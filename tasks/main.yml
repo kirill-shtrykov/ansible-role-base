@@ -3,15 +3,15 @@
   ansible.builtin.package:
     name: epel-release
     state: present
-  when: ansible_facts['os_family'] in ['RedHat', 'Rocky']
+  when: ansible_facts.os_family in ['RedHat', 'Rocky']
 
 - name: Load platform variables
   ansible.builtin.include_vars:
     file: "{{ ansible_facts.os_family }}.yml"
 
-- name: Install common packages
+- name: Install base packages
   ansible.builtin.package:
-    name: "{{ common_packages + common_packages_platform }}"
+    name: "{{ base_packages + base_additional_packages + base_platform_packages }}"
     state: present
 
 - name: Configure Bash
@@ -26,7 +26,7 @@
     shell: /bin/bash
     groups: sudo
     append: true
-  loop: "{{ common_users }}"
+  loop: "{{ base_users }}"
 
 - name: Add '.ssh' directory for users
   ansible.builtin.file:
@@ -35,7 +35,7 @@
     owner: "{{ item.name }}"
     group: "{{ item.name }}"
     mode: '0700'
-  loop: "{{ common_users }}"
+  loop: "{{ base_users }}"
 
 - name: Add users public keys
   ansible.builtin.copy:
@@ -44,11 +44,11 @@
     owner: "{{ item.name }}"
     group: "{{ item.name }}"
     mode: '0600'
-  loop: "{{ common_users }}"
+  loop: "{{ base_users }}"
 
 - name: Add passwordless sudo for users
   ansible.builtin.copy:
     content: "{{ item.name }} ALL=(ALL) NOPASSWD:ALL"
     dest: "/etc/sudoers.d/{{ item.name | replace('.', '_') }}"
     mode: "0644"
-  loop: "{{ common_users }}"
+  loop: "{{ base_users }}"

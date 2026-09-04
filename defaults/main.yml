@@ -1,6 +1,6 @@
 ---
-common_users: []
-common_packages:
+base_users: []
+base_packages:
   - atop
   - bash-completion
   - htop
@@ -19,6 +19,7 @@ common_packages:
   - pv
   - rsync
   - strace
+  - tar
   - tcptraceroute
   - telnet
   - tmux
@@ -26,5 +27,5 @@ common_packages:
   - unzip
   - vim
   - wget
-  - tar
   - zstd
+base_additional_packages: []

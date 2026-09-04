@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: common
+  role_name: base
   description: Base host configuration
   author: kirill-shtrykov
   license: MIT
